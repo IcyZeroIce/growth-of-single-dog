@@ -1,0 +1,124 @@
+html,
+body,
+img,
+p {
+    margin: 0;
+    padding: 0;
+    font-family: "Microsoft yahei";
+}
+
+#wrapper_back {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("img/bg.png");
+    background-size: auto 100%;
+    overflow: hidden;
+}
+
+.rain-food {
+    position: absolute;
+    width: auto;
+    height: 50px;
+}
+
+#doge {
+    z-index: 2;
+    position: absolute;
+    bottom: 6%;
+    left: 0%;
+    width: 65px;
+    height: 50px;
+    background-image: url("img/right.gif");
+    background-size: auto 100%;
+    background-repeat: none;
+    
+    transition: bottom 0.5s;
+    -ms-transition: bottom 0.5s;
+    -webkit-transition: bottom 0.5s;
+    -moz-transition: bottom 0.5s;
+    -o-transition: bottom 0.5s;
+    
+    transition-timing-function: cubic-bezier(3, 1.5, 0.5, 0.25);
+    -ms-transition-timing-function: cubic-bezier(3, 1.5, 0.5, 0.25);
+    -webkit-transition-timing-function: cubic-bezier(3, 1.5, 0.5, 0.25);
+    -moz-transition-timing-function: cubic-bezier(3, 1.5, 0.5, 0.25);
+    -o-transition-timing-function: cubic-bezier(3, 1.5, 0.5, 0.25);   
+}
+.jump {
+	bottom: 30%!important;
+}
+
+#dog {
+	z-index: 1;
+    position: absolute;
+    overflow: hidden;
+    bottom: 6%;
+    width: 100%;
+    height: 50px;
+}
+.running-dog {
+    z-index: 1;
+    position: absolute;
+    bottom: 6%;
+    width: auto;
+    height: 50px;
+}
+
+
+/* game start button */
+
+#layer {
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    /*display: none;*/
+}
+
+#dog_tag {
+    margin: 0 auto;
+    height: 80%;
+    width: 80%;
+    background-color: #00FF00;
+}
+
+#rule {}
+
+#rule #rule_text {}
+
+#rule #rule_begin {}
+
+#layer_btn {
+    width: 80%;
+    height: 50px;
+    margin: 20% auto 0;
+    color: #FFFFFF;
+    background-color: #8080FF;
+}
+
+#score {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-right: 10px;
+    width: auto;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    color: #808080;
+}
+
+#price_box {
+    display: none;
+}
+
+footer {
+    display: none;
+}
