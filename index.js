@@ -3,7 +3,7 @@ var FoodItems = [];
 /* 记分：身价 */
 var Score = 0;
 
-/* vary the dog food */
+/* --------------- vary the dog food ------------------ */
 var DogFoodKind = {
     0: {
         url: "img/food0.png",
@@ -58,14 +58,14 @@ function respond() {
     var windowW = $(window).width();
     var windowH = $(window).height();
     $("#wrapper").css({ "width": windowW + "px", "height": windowH + "px" });
-    
+
     return [
-    	windowW,
-    	windowH
+        windowW,
+        windowH
     ];
 }
 
-/* dog or dogs */
+/* ---------------------- single dog ------------------ */
 var singleDog = {
     left: 0,
     height: 0,
@@ -76,62 +76,62 @@ var singleDog = {
 
         /* start时会影响setInterval的速度 */
         $("#wrapper_back").bind({
-        	touchstart: function(evs) {
-	            x1 = evs.touches[0].clientX;
-	            // console.log("x1=>" + x1);
-        	},
-        	touchmove: function(evm) {
+            touchstart: function(evs) {
+                x1 = evs.touches[0].clientX;
+                // console.log("x1=>" + x1);
+            },
+            touchmove: function(evm) {
                 x2 = evm.touches[0].clientX;
-        	},
-        	touchend: function(eve) {
-	        	displacementX = x2 - x1;
-	            // console.log("displacementX=>" + displacementX);
-	
-	            var getLeft = $("#doge").offset().left + displacementX;
-	            // console.log("getLeft=>" + getLeft);
-	
-	            if (displacementX < 0) {
-	                $("#doge").css("background-image", "url('img/left.gif')");
-	            } else if (displacementX > 0) {
-	                $("#doge").css("background-image", "url('img/right.gif')");
-	            }
-	
-	            if (getLeft < 0) {
-	                getLeft = 0;
-	            } else if (getLeft > $(window).width() * 0.79) {
-	                getLeft = $(window).width() * 0.79;
-	            }
-	            // $("#doge").css("left", getLeft + "px");
-	            $("#doge").stop().animate({
-	                "left": getLeft + "px",
-	            }, Math.abs(displacementX) * 5);
-        	}
+            },
+            touchend: function(eve) {
+                displacementX = x2 - x1;
+                // console.log("displacementX=>" + displacementX);
+
+                var getLeft = $("#doge").offset().left + displacementX;
+                // console.log("getLeft=>" + getLeft);
+
+                if (displacementX < 0) {
+                    $("#doge").css("background-image", "url('img/left.gif')");
+                } else if (displacementX > 0) {
+                    $("#doge").css("background-image", "url('img/right.gif')");
+                }
+
+                if (getLeft < 0) {
+                    getLeft = 0;
+                } else if (getLeft > $(window).width() * 0.79) {
+                    getLeft = $(window).width() * 0.79;
+                }
+                // $("#doge").css("left", getLeft + "px");
+                $("#doge").stop().animate({
+                    "left": getLeft + "px",
+                }, Math.abs(displacementX) * 5);
+            }
         });
 
-		return [
-			x1,
-			x2
-		];
+        return [
+            x1,
+            x2
+        ];
     },
     jump: function() {
-	    $("#wrapper_back").click(function() {
-		    if(parseInt($("#doge").css("bottom")) <= 0.06 * $(window).height()) {
-				$("#doge").addClass("jump");
-				setTimeout(function() {
-					$("#doge").removeClass("jump");
-				}, 290);
-	    	}
-		});
-    	
-    	return true;
+        $("#wrapper_back").click(function() {
+            if (parseInt($("#doge").css("bottom")) <= 0.06 * $(window).height()) {
+                $("#doge").addClass("jump");
+                setTimeout(function() {
+                    $("#doge").removeClass("jump");
+                }, 290);
+            }
+        });
+
+        return true;
     },
 };
 
-/* game order */
+/* ---------------------- game order ------------------- */
 var GameStage = {
-	rainfood: 0,
-	crashed: 0,
-	cartoon: 0,
+    rainfood: 0,
+    crashed: 0,
+    cartoon: 0,
     /* initialize the game */
     init: function() {
         GameStage.start();
@@ -139,7 +139,7 @@ var GameStage = {
 
     /* show the rule and starting button */
     start: function() {
-        $("#layer_btn").click(function() {
+        $("#layer_btn_run").click(function() {
             GameStage.prepare();
         });
     },
@@ -155,70 +155,162 @@ var GameStage = {
     play: function() {
         /* create food */
         // rainFood();
-//      var rainfood = setInterval(rainFood, 2000);
-		GameStage.rainfood = setRainFood();
+        //      var rainfood = setInterval(rainFood, 2000);
+        GameStage.rainfood = setRainFood();
         singleDog.moving();
         singleDog.jump();
         GameStage.cartoon = setCartoon();
         GameStage.crashed = setCrashedCheck();
-        
+
     },
 
     /* trigger the ends */
-    end: function() {
-    	clearInterval(GameStage.cartoon);
-    	clearInterval(GameStage.rainfood);
-    	clearInterval(GameStage.crashed);
+    end: function(getDash) {
+        clearInterval(GameStage.cartoon);
+        clearInterval(GameStage.rainfood);
+        clearInterval(GameStage.crashed);
         FoodItems = null;
-		$("#layer").css("display", "block");
-		GameStage.restart();
-        if (1) {
-			
+
+        judgeEnd(getDash);
+        //Some events in the end.
+        function judgeEnd(getDash) {
+            if (getDash[1] == 1) {
+                $("#doge").css("background-image", "url('img/left.gif')");
+            } else if (getDash[1] == 0) {
+                $("#doge").css("background-image", "url('img/right.gif')");
+            }
+
+            $("#doge").stop();
+            $(".running-dog" + getDash[0]).stop();
+
+            var t = setInterval(function() {
+                console.log($(".running-dog" + getDash[0]).css("left"));
+                if ($(".running-dog" + getDash[0])) {
+                    $("#doge").animate({
+                        "left": $(".running-dog" + getDash[0]).css("left")
+                    }, 18);
+                } else {
+                    clearInterval(t);
+                }
+
+            }, 18);
+
+            switch (getDash[0]) {
+                case 0:
+                    ;
+                case 1:
+                    ;
+                case 2:
+                    ;
+                case 3:
+                    ;
+                case 4:
+                    ;
+                case 5:
+                    alert("你因寂寞变成了gay！");
+                    break;
+                case 6:
+                    ;
+                case 7:
+                    alert("你遭到莫须有情敌攻击！");
+                    break;
+                case 8:
+                    ;
+                case 9:
+                    alert("情侣秀恩爱，你受到一万点伤害！");
+                    break;
+                default:
+                    ;
+            }
+
         }
+
+        $("#layer").css("display", "block");
+
+        $("#share").show();
+        $("#price_box").show();
+        $("#rule_img").hide();
+        $("#layer").hide();
+        // $("#wrapper").hide();
+        $("#score").hide();
+        $("#restart").show();
+
+        var e = 0;
+        var end_words = "结束语";
+        var end_dog_url = "img/rule.png";
+        var end_background = "img/begay.gif";
+        var end_kind = "中华田园犬";
+        // $("body").css({"background-image":"url('img/bg.png')"});
+        if (e == 0) {
+            // 变基佬
+            $("#price_box").css({ "background": "url(" + end_background + ")" });
+        } else {
+            // 遇到情侣
+            $("#price_box").css({ "background": "url(" + end_background + ")" });
+        }
+
+        if (Score > 0 && Score < 200) {
+            end_words = "恭喜你获得了" + Score + "分";
+            end_dog_url = "img/rule.png";
+        } else if (Score > 200 && Score < 800) {
+            end_words = "恭喜你获得了" + Score + "分";
+            end_dog_url = "img/rule.png";
+            end_kind = "柯基";
+        } else {
+            end_words = "恭喜你获得了" + Score + "分";
+            end_dog_url = "img/rule.png";
+            end_kind = "泰迪";
+        }
+        $("#words").text(end_words);
+        $("#dog_pic").attr("src", end_dog_url);
+        $("#end_kind").text(end_kind);
+        $("#end_kind").next().attr("src", "img/kind.png")
+
+        GameStage.restart();
     },
-    
+
     restart: function() {
-    	$("#layer_btn").click(function() {
-	    	window.location.href = "index.html";
-    	});
+        $("#restart").click(function() {
+            window.location.reload();
+        });
     }
 }
 GameStage.init();
 
-/* rain the dog foods */
+/* ---------------- rain the dog foods ---------------- */
 function setRainFood() {
-	
-	t = setInterval(function() {
-		rainFood();
-	} , 2000);
-	
-	function rainFood() {
-	    /* create food once in js */
-	    var food = createItem();
-	    // console.log(food);
-	
-	    /* produce food once in HTML */
-	    $("#wrapper_back").append("<img class='rain-food' id='" + food.id + "' src='" + food.url + "' />");
-	
-	    /* initialize the food falling */
-	    food.fall;
-	
-	    /* initialize */
-	    $("#" + food.id).css("left", food.x + "px");
-	
-	    /* fall and remove when out of screen */
-	    var t = setInterval(function() {
-	        $("#" + food.id).css("top", food.y + "px");
-	        if (food.y > $(window).height()) {
-	            food.isCrash = 1;
-	            clearInterval(t);
-	            food.stop();
-	            $("#" + food.id).remove();
-	            food = null;
-	        }
-	    }, 18);
-		
-	}
+
+    t = setInterval(function() {
+        rainFood();
+    }, 2000);
+
+    function rainFood() {
+        /* create food once in js */
+        var food = createItem();
+        // console.log(food);
+
+        /* produce food once in HTML */
+        $("#wrapper_back").append("<img class='rain-food' id='" + food.id + "' src='" + food.url + "' />");
+
+        /* initialize the food falling */
+        food.fall;
+
+        /* initialize */
+        $("#" + food.id).css("left", food.x + "px");
+
+        /* fall and remove when out of screen */
+        var t = setInterval(function() {
+            $("#" + food.id).css("top", food.y + "px");
+            if (food.y > $(window).height()) {
+                food.isCrash = 1;
+                clearInterval(t);
+                food.stop();
+                $("#" + food.id).remove();
+                food = null;
+            }
+        }, 18);
+
+    }
 
 
     function createItem() {
@@ -248,47 +340,47 @@ function setRainFood() {
         FoodItems.push(foodItem);
         return foodItem;
     }
-    
+
     /* 定时器 */
     return t;
 }
 
 
-/* 边缘检测 */
+/* ------------------- 边缘检测 -------------------- */
 function setCrashedCheck() {
 
-	t = setInterval(function() {
-		isCrashed();
-	}, 18);
+    t = setInterval(function() {
+        isCrashed();
+    }, 18);
 
-	function isCrashed() {
-	    FoodItems.forEach(function(item) {
-	        var upOffset = item.y;
-	        var downOffset = item.y + $("#" + item.id).height();
-	        var leftOffset = item.x;
-	        var rightOffset = item.x + $("#" + item.id).height();
-	        var dogTop = $("#doge").offset().top;
-	        var dogBottom = $("#doge").offset().top + $("#doge").height();
-	        var dogLeft = $("#doge").offset().left;
-	        var dogRight = $("#doge").offset().left + $("#doge").width();
-	
-	        var picString = $("#doge").css("background-image");
-	        var reg = /\w*?(?=.gif)/g;
-	        var lOrR = reg.exec(picString)
-	
-	        if (lOrR == "left" && downOffset > dogTop && rightOffset > dogLeft && upOffset < dogBottom && leftOffset < dogRight) {
-	            cutFood(item);
-	            
-	            return 1;
-	        } else if (lOrR == "right" && downOffset > dogTop && leftOffset < dogRight && upOffset < dogBottom && rightOffset > dogLeft) {
-	            cutFood(item);
-	            
-	            return 1;
-	        }
-	    });
-	
-		return 0; 
-	}
+    function isCrashed() {
+        FoodItems.forEach(function(item) {
+            var upOffset = item.y;
+            var downOffset = item.y + $("#" + item.id).height();
+            var leftOffset = item.x;
+            var rightOffset = item.x + $("#" + item.id).height();
+            var dogTop = $("#doge").offset().top;
+            var dogBottom = $("#doge").offset().top + $("#doge").height();
+            var dogLeft = $("#doge").offset().left;
+            var dogRight = $("#doge").offset().left + $("#doge").width();
+
+            var picString = $("#doge").css("background-image");
+            var reg = /\w*?(?=.gif)/g;
+            var lOrR = reg.exec(picString)
+
+            if (lOrR == "left" && downOffset > dogTop && rightOffset > dogLeft && upOffset < dogBottom && leftOffset < dogRight) {
+                cutFood(item);
+
+                return 1;
+            } else if (lOrR == "right" && downOffset > dogTop && leftOffset < dogRight && upOffset < dogBottom && rightOffset > dogLeft) {
+                cutFood(item);
+
+                return 1;
+            }
+        });
+
+        return 0;
+    }
 
 
     function cutFood(that) {
@@ -297,21 +389,21 @@ function setCrashedCheck() {
 
         Score += that.price;
         $("#score_show").text(Score);
-        
+
         return that.price;
     }
-    
+
     return t;
 }
 
-/* cross dash dog */
+/* ------------------- cross dash dog ---------------- */
 // 跑过来的情侣动画
 function setCartoon() {
 
     var dashDog = {
         0: {
             url: "img/gay0.gif",
-            speed: 1,
+            speed: 5,
         },
         1: {
             url: "img/gay1.gif",
@@ -351,81 +443,90 @@ function setCartoon() {
         }
     };
 
-	var num = 0;
-	var ct = setInterval(function() {
-		createDash(num);
-	}, 6000);
-	
-	var check = setInterval(function() {
-		switch(checkHurt()) {
-			case 1: {
-					clearInterval(check);
-					GameStage.end();
-				break;
-			}
-			case 0:
-			default: break;
-		}
+    var num = 0;
+    var getDash = 0;
+    var ct = setInterval(function() {
+        getDash = createDash(num);
+    }, 6000);
+
+    var check = setInterval(function() {
+        switch (checkHurt()) {
+            case 1:
+                {
+                    clearInterval(check);
+                    GameStage.end(getDash);
+                    break;
+                }
+            case 0:
+            default:
+                break;
+        }
     }, 18);
-    
-	function createDash(num) {
-	   	var n = Math.floor(Math.random() * 10);
-	   	/* direction为0表示从左往右，1表示从右往左 */
-		var direction = Math.floor(Math.random() * 2);
 
-	    // 创建gay
-	    $("#dog").append('<img src=' + dashDog[n].url + ' class="running-dog running-dog' + num + '">');
-		$(".running-dog" + num).css("left", direction * 200 - 50 + "%");
-		if(!direction) {
-			$(".running-dog" + num).css("transform", "rotateY(180deg)");
-		}
-		$(".running-dog" + num).animate({ "left": (1 - direction) * 200 - 50 + "%"}, 5000 * dashDog[n].speed, function() {
-			$(this).remove();
-		});
-		
-		num++;
-		
-		return [
-			n,
-			direction,
-		];
-	}
-	
-	function checkHurt() {
-		var hurtLevel = 0;
-		$(".running-dog").each(function() {
-	        var doge_position = $("#doge").offset();
-	        var running_dog_pisition = $(this).offset();
-	
-	        var doge_left = doge_position.left;
-	        var doge_right = doge_position.left + $("#doge").width();
-	        var doge_top = doge_position.top;
-	        var doge_bottom = doge_position.top + $("#doge").height();
-//			console.log("doge_left=>" + doge_left + "doge_right=>" + doge_right + "doge_top=>" + doge_top + "doge_bottom=>" + doge_bottom);
+    function createDash(num) {
+        var n = Math.floor(Math.random() * 10);
+        /* direction为0表示从左往右，1表示从右往左 */
+        var direction = Math.floor(Math.random() * 2);
 
-	        var running_dog_left = running_dog_pisition.left;
-	        var running_dog_right = running_dog_pisition.left + $(this).width();
-	        var running_dog_top = running_dog_pisition.top;
-	        var running_dog_bottom = running_dog_pisition.top + $(this).height();
-//			console.log("running_dog_left=>" + running_dog_left + "running_dog_right=>" + running_dog_right + "running_dog_top=>" + running_dog_top + "running_dog_bottom=>" + running_dog_bottom);
+        // 创建gay
+        $("#dog").append('<img src=' + dashDog[n].url + ' class="running-dog running-dog' + num + '">');
+        $(".running-dog" + num).css("left", direction * 200 - 50 + "%");
+        if (!direction) {
+            $(".running-dog" + num).css("transform", "rotateY(180deg)");
+        }
+        $(".running-dog" + num).animate({ "left": (1 - direction) * 200 - 50 + "%" }, 5000 * dashDog[n].speed, function() {
+            if (parseInt($(this).css("left")) < 0 || parseInt($(this).css("left")) > windowW) {
+                $(this).remove();
+            }
+        });
 
-	        var distance_left = Math.abs(doge_left - running_dog_left);
-	        var distance_right = Math.abs(doge_right - running_dog_right);
-	        var distance_top = Math.abs(doge_top - running_dog_top);
-	        var distance_bottom = Math.abs(doge_bottom - running_dog_bottom);
-//			console.log("distance_top=>" + distance_top + "distance_right=>" + distance_right + "distance_bottom=>" + distance_bottom + "distance_left=>" + distance_left);
+        num++;
 
-	        if (distance_left < 20 || distance_right < 20) {
-	            if (distance_top < 20 || distance_bottom < 20) {
-					console.log("crash!");
-					
-					hurtLevel = 1;
-	            }
-	        }
-		});
-		
-		return hurtLevel;
-	}
-	
-	return ct;
+        return [
+            n,
+            direction
+        ];
+    }
+
+    function checkHurt() {
+        var hurtLevel = 0;
+        $(".running-dog").each(function() {
+            var doge_position = $("#doge").offset();
+            var running_dog_pisition = $(this).offset();
+
+            var doge_left = doge_position.left;
+            var doge_right = doge_position.left + $("#doge").width();
+            var doge_top = doge_position.top;
+            var doge_bottom = doge_position.top + $("#doge").height();
+            //			console.log("doge_left=>" + doge_left + "doge_right=>" + doge_right + "doge_top=>" + doge_top + "doge_bottom=>" + doge_bottom);
+
+            var running_dog_left = running_dog_pisition.left;
+            var running_dog_right = running_dog_pisition.left + $(this).width();
+            var running_dog_top = running_dog_pisition.top;
+            var running_dog_bottom = running_dog_pisition.top + $(this).height();
+            //			console.log("running_dog_left=>" + running_dog_left + "running_dog_right=>" + running_dog_right + "running_dog_top=>" + running_dog_top + "running_dog_bottom=>" + running_dog_bottom);
+
+            var distance_left = Math.abs(doge_left - running_dog_left);
+            var distance_right = Math.abs(doge_right - running_dog_right);
+            var distance_top = Math.abs(doge_top - running_dog_top);
+            var distance_bottom = Math.abs(doge_bottom - running_dog_bottom);
+            //			console.log("distance_top=>" + distance_top + "distance_right=>" + distance_right + "distance_bottom=>" + distance_bottom + "distance_left=>" + distance_left);
+
+            if (distance_left < 20 || distance_right < 20) {
+                if (distance_top < 20 || distance_bottom < 20) {
+                    console.log("crash!");
+
+                    hurtLevel = 1;
+                }
+            }
+        });
+
+        return hurtLevel;
+    }
+
+    return ct;
 }
+
+$(document).ready(function() {
+    $("#dog_tag").animate({ top: "10%" }, 1800);
+});
