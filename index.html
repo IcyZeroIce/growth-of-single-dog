@@ -33,18 +33,22 @@
         <div id="dog_tag">
             <!-- 引言 -->
             <div class="quote">
-                <p>光棍节，还是单身狗？不如一起轰轰</p>
-                <p>烈烈地过完这段狗生吧</p>
+                <!--<p>光棍节，还是单身狗？不如一起轰轰</p>
+                <p>烈烈地过完这段狗生吧</p>-->
             </div>
 
             <!-- 游戏规则图片 -->
-            <div id="rule">
-                <div id="rule_text"></div>
-                <div id="rule_begin" class="img"></div>
-            </div>
+            <!-- 标题 -->
+            <img src="img/title.png" id="title">
 
             <div id="layer_btn">
-                <a id="layer_btn_run" class="img"></a>
+                <div id="layer_btn_run" class="img">start</div>
+
+                <div id="rule">
+                    <img src="img/rule.png" id="rule_img">
+                    <div id="rule_text">左右触摸滑动,单击屏幕跳跃躲开两边跑 出的情侣,吃到天上掉下来的狗粮</div>
+                    <div id="rule_begin" class="img"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -60,11 +64,15 @@
             <img id="dog_pic">
         </div>
         <p id="words"></p>
+        <p id="end_kind">种类</p>
+        <img src="" id="kind_text">
+        <img src="" id="dog_img">;
     </div>
 
+    <div id="restart">重新开始</div>
 
     <!-- 版权声明 -->
-    <!--<img id="share" src="share.png"></img>-->
+    <img id="share" src="img/share.png"></img>
     <footer>created by 华工创维俱乐部</footer>
     <!--<audio src="bgm.mp3" autoplay="autoplay" loop="loop" hidden="true" id="bgm"></audio>-->
 
