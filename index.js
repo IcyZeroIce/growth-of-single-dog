@@ -3,7 +3,7 @@ var FoodItems = [];
 /* 记分：身价 */
 var Score = 0;
 
-/* vary the dog food */
+/* --------------- vary the dog food ------------------ */
 var DogFoodKind = {
     0: {
         url: "img/food0.png",
@@ -65,7 +65,7 @@ function respond() {
     ];
 }
 
-/* dog or dogs */
+/* ---------------------- single dog ------------------ */
 var singleDog = {
     left: 0,
     height: 0,
@@ -127,7 +127,7 @@ var singleDog = {
     },
 };
 
-/* game order */
+/* ---------------------- game order ------------------- */
 var GameStage = {
     rainfood: 0,
     crashed: 0,
@@ -165,11 +165,66 @@ var GameStage = {
     },
 
     /* trigger the ends */
-    end: function() {
+    end: function(getDash) {
         clearInterval(GameStage.cartoon);
         clearInterval(GameStage.rainfood);
         clearInterval(GameStage.crashed);
         FoodItems = null;
+
+        judgeEnd(getDash);
+        //Some events in the end.
+        function judgeEnd(getDash) {
+            if (getDash[1] == 1) {
+                $("#doge").css("background-image", "url('img/left.gif')");
+            } else if (getDash[1] == 0) {
+                $("#doge").css("background-image", "url('img/right.gif')");
+            }
+
+            $("#doge").stop();
+            $(".running-dog" + getDash[0]).stop();
+
+            var t = setInterval(function() {
+                console.log($(".running-dog" + getDash[0]).css("left"));
+                if ($(".running-dog" + getDash[0])) {
+                    $("#doge").animate({
+                        "left": $(".running-dog" + getDash[0]).css("left")
+                    }, 18);
+                } else {
+                    clearInterval(t);
+                }
+
+            }, 18);
+
+            switch (getDash[0]) {
+                case 0:
+                    ;
+                case 1:
+                    ;
+                case 2:
+                    ;
+                case 3:
+                    ;
+                case 4:
+                    ;
+                case 5:
+                    alert("你因寂寞变成了gay！");
+                    break;
+                case 6:
+                    ;
+                case 7:
+                    alert("你遭到莫须有情敌攻击！");
+                    break;
+                case 8:
+                    ;
+                case 9:
+                    alert("情侣秀恩爱，你受到一万点伤害！");
+                    break;
+                default:
+                    ;
+            }
+
+        }
+
         $("#layer").css("display", "block");
 
         $("#share").show();
@@ -212,8 +267,8 @@ var GameStage = {
         $("#words").text(end_words);
         $("#dog_pic").attr("src", end_dog_url);
         $("#end_kind").text(end_kind);
-        $("#end_kind").next().attr("src","img/kind.png");
-        $("#end_kind").next().next().attr("src",dog_url);
+        $("#end_kind").next().attr("src", "img/kind.png");
+        $("#end_kind").next().next().attr("src", dog_url);
         GameStage.restart();
     },
 
@@ -225,7 +280,7 @@ var GameStage = {
 }
 GameStage.init();
 
-/* rain the dog foods */
+/* ---------------- rain the dog foods ---------------- */
 function setRainFood() {
 
     t = setInterval(function() {
@@ -294,7 +349,7 @@ function setRainFood() {
 }
 
 
-/* 边缘检测 */
+/* ------------------- 边缘检测 -------------------- */
 function setCrashedCheck() {
 
     t = setInterval(function() {
@@ -344,14 +399,14 @@ function setCrashedCheck() {
     return t;
 }
 
-/* cross dash dog */
+/* ------------------- cross dash dog ---------------- */
 // 跑过来的情侣动画
 function setCartoon() {
 
     var dashDog = {
         0: {
             url: "img/gay0.gif",
-            speed: 1,
+            speed: 5,
         },
         1: {
             url: "img/gay1.gif",
@@ -392,8 +447,9 @@ function setCartoon() {
     };
 
     var num = 0;
+    var getDash = 0;
     var ct = setInterval(function() {
-        createDash(num);
+        getDash = createDash(num);
     }, 6000);
 
     var check = setInterval(function() {
@@ -401,7 +457,7 @@ function setCartoon() {
             case 1:
                 {
                     clearInterval(check);
-                    GameStage.end();
+                    GameStage.end(getDash);
                     break;
                 }
             case 0:
@@ -422,14 +478,16 @@ function setCartoon() {
             $(".running-dog" + num).css("transform", "rotateY(180deg)");
         }
         $(".running-dog" + num).animate({ "left": (1 - direction) * 200 - 50 + "%" }, 5000 * dashDog[n].speed, function() {
-            $(this).remove();
+            if (parseInt($(this).css("left")) < 0 || parseInt($(this).css("left")) > windowW) {
+                $(this).remove();
+            }
         });
 
         num++;
 
         return [
             n,
-            direction,
+            direction
         ];
     }
 

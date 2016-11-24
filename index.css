@@ -82,7 +82,8 @@ p {
     background-color: rgba(0, 0, 0, 0.3);
     /*display: none;*/
 }
-#layer #title{
+
+#layer #title {
     width: 150%;
     height: 140%;
     position: absolute;
@@ -216,17 +217,20 @@ footer {
     top: 70%;
     font-size: 40px;
 }
-#kind_text{
+
+#kind_text {
     position: absolute;
     left: 20%;
     top: 69%;
     width: 100px;
     height: 52px;
 }
+
 #star img {
     width: 100%;
 }
-#dog_img{
+
+#dog_img {
     position: absolute;
     left: 21%;
     top: 39%;
